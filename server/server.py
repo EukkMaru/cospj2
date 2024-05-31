@@ -11,6 +11,9 @@ OPCODE_WAIT = 2
 OPCODE_DONE = 3
 OPCODE_QUIT = 4
 
+POWER_OFFSET = 120
+TEMP_OFFSET = 15
+
 class Server:
     def __init__(self, name, algorithm, dimension, index, port, caddr, cport, ntrain, ntest):
         logging.info("[*] Initializing the server module to receive data from the edge device")
@@ -98,10 +101,19 @@ class Server:
             sys.exit(1)
 
     def parse_data(self, buf, is_training):
-        temp = int.from_bytes(buf[0:1], byteorder="big", signed=True)
-        humid = int.from_bytes(buf[1:2], byteorder="big", signed=True)
-        power = int.from_bytes(buf[2:4], byteorder="big", signed=True)
-        month = int.from_bytes(buf[4:5], byteorder="big", signed=True)
+        # * buffer length check
+        # if len(buf) != 3:
+        #     raise ValueError("Buffer length must be 3 bytes")
+
+        # Combine the 3 bytes into a single 24-bit integer
+        packed = (buf[0] << 16) | (buf[1] << 8) | buf[2]
+        
+        temp = (packed & 0x3F) - TEMP_OFFSET
+        humid = (packed >> 6) & 0x3F
+        humid = int(humid * 100 / 63)
+        power = (packed >> 12) & 0xFF
+        power += POWER_OFFSET
+        month = (packed >> 20) & 0x0F
 
         lst = [temp, humid, power, month]
         logging.info("[temp, humid, power, month] = {}".format(lst))
