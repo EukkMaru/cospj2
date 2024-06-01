@@ -1,7 +1,7 @@
 #ifndef __HUMIDITY_DATA_H__
 #define __HUMIDITY_DATA_H__
 
-#include "data.h"
+#include "default_data.h"
 
 class HumidityData : public defaultData<HumidityData> {
   private:

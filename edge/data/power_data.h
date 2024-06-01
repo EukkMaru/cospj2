@@ -1,7 +1,7 @@
 #ifndef __POWER_DATA_H__
 #define __POWER_DATA_H__
 
-#include "data.h"
+#include "default_data.h"
 
 class PowerData : public defaultData<PowerData> {
   public:

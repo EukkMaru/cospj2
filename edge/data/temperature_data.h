@@ -1,7 +1,7 @@
 #ifndef __TEMPERATURE_H__
 #define __TEMPERATURE_H__
 
-#include "data.h"
+#include "default_data.h"
 
 class TemperatureData : public defaultData<TemperatureData> {
   private:
